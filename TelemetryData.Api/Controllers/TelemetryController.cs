@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using TelemetryData.Api.Data;
 using TelemetryData.Api.Models;
 
 namespace TelemetryData.Api.Controllers
@@ -8,18 +9,24 @@ namespace TelemetryData.Api.Controllers
   [ApiController]
   public class TelemetryController : ControllerBase
   {
-    //static list for in memory storage
-    private static List<TelemetryDataModel> _telemetryData = new List<TelemetryDataModel>();
+    private readonly TelemetryDbContext _context;
+
+    //constructor for dependency injection
+    public TelemetryController(TelemetryDbContext context)
+    {
+      _context = context;
+    }
 
     [HttpGet]
-    public IEnumerable<TelemetryDataModel> GetAllTelemetry()
+    public async Task<IEnumerable<TelemetryDataModel>> GetAllTelemetry()
     {
-      return _telemetryData; //return the actual list
+      return await _context.TelemetryData.ToListAsync();
     }
     [HttpPost]
-    ActionResult createNewTelemetryDatamodel([FromBody] TelemetryDataModel telemetry)
+    public async Task<IActionResult> createNewTelemetryDatamodel([FromBody] TelemetryDataModel telemetry)
     {
-      _telemetryData.Add(telemetry);
+      _context.TelemetryData.Add(telemetry);
+      await _context.SaveChangesAsync(); // commit changes to db
 
       //return 201 created and the new item
       return CreatedAtAction(nameof(GetAllTelemetry), new { id = telemetry.VehicleId }, telemetry);

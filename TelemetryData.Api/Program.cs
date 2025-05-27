@@ -1,9 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using TelemetryData.Api.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //add services to container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<TelemetryDbContext>(
+  options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 
 var app = builder.Build();

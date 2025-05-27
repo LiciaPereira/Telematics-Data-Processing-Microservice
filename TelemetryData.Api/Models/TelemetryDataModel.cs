@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TelemetryData.Api.Models
 {
   public class TelemetryDataModel
   {
+    [Key]
     public Guid VehicleId { get; set; }
     public DateTime DateCreated { get; set; }
     public decimal Latitude { get; set; }
