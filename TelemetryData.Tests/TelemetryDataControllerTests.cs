@@ -14,7 +14,7 @@ namespace TelemetryData.Tests
       var testLatitude = -23.1816390M;
       var testLongitude = -46.884170M;
       var testSpeed = 75.0F;
-      var testEngine = TelemetryData.Api.Models.EngineStatus.Idle;
+      var testEngine = EngineStatus.Idle;
 
       //act
       var telemetry = new TelemetryDataModel(
