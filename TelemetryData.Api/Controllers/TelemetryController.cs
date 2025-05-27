@@ -8,10 +8,21 @@ namespace TelemetryData.Api.Controllers
   [ApiController]
   public class TelemetryController : ControllerBase
   {
+    //static list for in memory storage
+    private static List<TelemetryDataModel> _telemetryData = new List<TelemetryDataModel>();
+
     [HttpGet]
     public IEnumerable<TelemetryDataModel> GetAllTelemetry()
     {
-      return new List<TelemetryDataModel>();
+      return _telemetryData; //return the actual list
+    }
+    [HttpPost]
+    ActionResult createNewTelemetryDatamodel([FromBody] TelemetryDataModel telemetry)
+    {
+      _telemetryData.Add(telemetry);
+
+      //return 201 created and the new item
+      return CreatedAtAction(nameof(GetAllTelemetry), new { id = telemetry.VehicleId }, telemetry);
     }
   }
 }
