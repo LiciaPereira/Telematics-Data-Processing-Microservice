@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace TelemetryData.Api.Models
+namespace TelemetryData.Domain
 {
   public class TelemetryDataModel
   {
@@ -28,11 +28,5 @@ namespace TelemetryData.Api.Models
       Speed = speed;
       EngineStatus = engineStatus;
     }
-  }
-  public enum EngineStatus
-  {
-    Off = 0,
-    Running = 1,
-    Idle = 2
   }
 }

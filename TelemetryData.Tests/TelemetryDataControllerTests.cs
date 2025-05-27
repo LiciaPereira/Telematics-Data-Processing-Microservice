@@ -1,4 +1,4 @@
-﻿using TelemetryData.Api.Models;
+﻿using TelemetryData.Domain;
 
 namespace TelemetryData.Tests
 {

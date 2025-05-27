@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TelemetryData.Api.Data;
+using TelemetryData.Domain.Interfaces;
+using TelemetryData.Infrastructure.Data;
+using TelemetryData.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,9 @@ builder.Services.AddDbContext<TelemetryDbContext>(
   options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+//register services for DI
+//when an ITelemetryService is requested, the DI container will provide an instance of TelemetryService
+builder.Services.AddScoped<ITelemetryService, TelemetryService>();
 
 var app = builder.Build();
 

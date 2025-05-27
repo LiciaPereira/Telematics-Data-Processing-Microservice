@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TelemetryData.Api.Models;
+using TelemetryData.Domain;
 
-namespace TelemetryData.Api.Data
+namespace TelemetryData.Infrastructure.Data
 {
   public class TelemetryDbContext : DbContext
   {
