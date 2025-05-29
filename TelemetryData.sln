@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelemetryData.Domain", "Tel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelemetryData.Infrastructure", "TelemetryData.Infrastructure\TelemetryData.Infrastructure.csproj", "{9B411FF3-B838-44F0-8709-235863C769C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelemetryData.GrpcService", "TelemetryData.GrpcService\TelemetryData.GrpcService.csproj", "{A299F9E6-A815-4156-AB23-17851D40455C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,18 @@ Global
 		{9B411FF3-B838-44F0-8709-235863C769C6}.Release|x64.Build.0 = Release|Any CPU
 		{9B411FF3-B838-44F0-8709-235863C769C6}.Release|x86.ActiveCfg = Release|Any CPU
 		{9B411FF3-B838-44F0-8709-235863C769C6}.Release|x86.Build.0 = Release|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Debug|x64.Build.0 = Debug|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Debug|x86.Build.0 = Debug|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Release|x64.ActiveCfg = Release|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Release|x64.Build.0 = Release|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Release|x86.ActiveCfg = Release|Any CPU
+		{A299F9E6-A815-4156-AB23-17851D40455C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

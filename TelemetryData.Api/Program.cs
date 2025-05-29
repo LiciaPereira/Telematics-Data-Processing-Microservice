@@ -1,3 +1,4 @@
+using Grpc.Net.Client;
 using Microsoft.EntityFrameworkCore;
 using TelemetryData.Domain.Interfaces;
 using TelemetryData.Infrastructure.Data;
@@ -12,6 +13,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TelemetryDbContext>(
   options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+//configure and register the GrpcChannel as a singleton for efficiency
+builder.Services.AddSingleton(services => {
+  //I'll disable SSL certificate validation for now. will configure proper certificates in production
+  var grpcChannelOptions = new GrpcChannelOptions {
+    Credentials = Grpc.Core.ChannelCredentials.Insecure
+  };
+  return GrpcChannel.ForAddress("http://localhost:5000/", grpcChannelOptions);
+});
 
 //register services for DI
 //when an ITelemetryService is requested, the DI container will provide an instance of TelemetryService

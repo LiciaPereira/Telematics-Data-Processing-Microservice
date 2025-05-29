@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+//we should define the C# namespace for the generated gRPC code.
+// this is good so generated classes like TelemetryGrpcService and its client/server bases will redute in this specific .net namespace, making easy to reference
+option csharp_namespace = "TelemetryData.GrpcService";
+
+//defined the Protobuf package
+package telemetry;
+
+// The service definition. it's a contract that specifies the remote procedurecalls, available for interacting with telemetry status
+service TelemetryGrpcService {
+  // RPC method to get the real-time status of a vehicle.
+  rpc GetTelemetryStatus (GetTelemetryStatusRequest) returns (TelemetryStatusReply);
+}
+
+// message definition for a request to get telemetry status
+message GetTelemetryStatusRequest{
+  string vehicle_id = 1; //field number 1
+}
+
+//message definition for the response containing telemetry status information
+message TelemetryStatusReply {
+  string status_message = 1;
+  bool is_online = 2;
+}
