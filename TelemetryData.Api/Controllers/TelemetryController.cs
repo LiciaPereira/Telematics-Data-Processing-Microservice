@@ -1,4 +1,5 @@
-﻿using Grpc.Net.Client;
+﻿using Confluent.Kafka;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using TelemetryData.Domain;
 using TelemetryData.Domain.Interfaces;
@@ -71,5 +72,17 @@ namespace TelemetryData.Api.Controllers
       return Ok(new { reply.StatusMessage, reply.IsOnline });
     }
 
+    [HttpPost("event")] // endpoint for kafka topic
+    public async Task<IActionResult> PostTelemetryEvent([FromBody] TelemetryDataModel telemetry)
+    {
+      //define placeholder variables at first
+      var config = new ProducerConfig { BootstrapServers = "localhost:9092" };
+      using var producer = new ProducerBuilder<Null, string>(config).Build();
+
+      //attempt to produce a message (just a placeholder)
+      await producer.ProduceAsync("telemetry-events-topic", new Message<Null, string> { Value = "Test message" });
+
+      return Ok("Telemetry event published.");
+    }
   }
 }
