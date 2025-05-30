@@ -1,6 +1,7 @@
 ﻿using Confluent.Kafka;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using TelemetryData.Domain;
 using TelemetryData.Domain.Interfaces;
 using TelemetryData.GrpcService;
@@ -79,8 +80,10 @@ namespace TelemetryData.Api.Controllers
       var config = new ProducerConfig { BootstrapServers = "localhost:9092" };
       using var producer = new ProducerBuilder<Null, string>(config).Build();
 
-      //attempt to produce a message (just a placeholder)
-      await producer.ProduceAsync("telemetry-events-topic", new Message<Null, string> { Value = "Test message" });
+      var telemetryJson = JsonSerializer.Serialize(telemetry);
+
+      //produce a message
+      await producer.ProduceAsync("telemetry-events-topic", new Message<Null, string> { Value = telemetryJson });
 
       return Ok("Telemetry event published.");
     }

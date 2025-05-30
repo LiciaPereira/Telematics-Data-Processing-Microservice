@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using System;
+using System.Text.Json;
 using System.Threading;
 using TelemetryData.Domain;
 
@@ -33,9 +34,14 @@ namespace TelemetryData.ConsumerService
             try {
               //consume a message
               var consumeResult = consumer.Consume(cts.Token);
-              Console.WriteLine($"Received message: {consumeResult.Message.Value} on Partition: {consumeResult.Partition.Value}, Offset: {consumeResult.Offset.Value}");
 
-              //for now I'll just display a string, then I'll deserialize consume.Result.Value
+              TelemetryDataModel? receivedTelemetry = JsonSerializer.Deserialize<TelemetryDataModel>(consumeResult.Message.Value);
+
+              if (receivedTelemetry != null) {
+                Console.WriteLine($"Received TelemetryData: VehicleId={receivedTelemetry.VehicleId}, Speed={receivedTelemetry.Speed}, Engine Status={receivedTelemetry.EngineStatus}, on Partition: {consumeResult.Partition.Value}, Offset: {consumeResult.Offset.Value}");
+              } else {
+                Console.WriteLine($"Received null telemetry data from message: {consumeResult.Message.Value}");
+              }
             }
             catch (ConsumeException e) {
               Console.WriteLine($"Error consuming message: {e.Error.Reason}");
