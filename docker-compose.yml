@@ -27,3 +27,46 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     depends_on:
       - zookeeper
+
+  telematics-db:
+    image: postgres:latest
+    container_name: telematics-db
+    hostname: telematics-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB_NAME}
+
+  telemetry-api:
+    build:
+      context: . 
+      dockerfile: TelemetryData.Api/Dockerfile 
+    container_name: telemetry-api
+    ports:
+      - "5046:80"
+    depends_on:
+      - telematics-db
+      - broker
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=telematics-db;Port=5432;Database=${POSTGRES_DB_NAME};Username=postgres;Password=${POSTGRES_ROOT_PASSWORD}"
+      GrpcServiceUrl: "http://telemetry-grpcservice:80"
+
+  telemetry-grpcservice:
+    build:
+      context: . 
+      dockerfile: TelemetryData.GrpcService/Dockerfile
+    container_name: telemetry-grpcservice
+    ports:
+      - "5000:80"
+
+  telemetry-consumerservice:
+    build:
+      context: . 
+      dockerfile: TelemetryData.ConsumerService/Dockerfile
+    container_name: telemetry-consumerservice
+    environment:
+      Kafka__BootstrapServers: ${KAFKA_BOOTSTRAP_SERVERS}
+      Kafka__GroupId: ${KAFKA_GROUPID}
+    depends_on:
+      - broker

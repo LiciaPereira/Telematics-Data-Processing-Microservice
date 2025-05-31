@@ -19,7 +19,9 @@ builder.Services.AddSingleton(services => {
   var grpcChannelOptions = new GrpcChannelOptions {
     Credentials = Grpc.Core.ChannelCredentials.Insecure
   };
-  return GrpcChannel.ForAddress("http://localhost:5000/", grpcChannelOptions);
+  //get gRPC service URL from configuration (like environment variable in Docker Compose)
+  var grpcServiceUrl = builder.Configuration.GetValue<string>("GrpcServiceUrl") ?? "http://localhost:5000";//fallback for local dev
+  return GrpcChannel.ForAddress(grpcServiceUrl, grpcChannelOptions);
 });
 
 //register services for DI

@@ -1,20 +1,34 @@
 ﻿using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Text.Json;
 using System.Threading;
+using TelemetryData.ConsumerService.Processing;
 using TelemetryData.Domain;
 
 namespace TelemetryData.ConsumerService
 {
   public class Program
   {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
       Console.WriteLine("Kafka Consumer Service Started");
 
+      var host = Host.CreateDefaultBuilder(args).ConfigureAppConfiguration((hostingContext, config) => {
+        config.AddEnvironmentVariables();//add env variables as a configuration source
+      }).ConfigureServices((hostContext, services) => {
+        services.AddScoped<ITelemetryProcessor, TelemetryProcessor>(); //register the processor for DI
+      }).Build();
+
+      var configuration = host.Services.GetRequiredService<IConfiguration>();
+      var processor = host.Services.GetRequiredService<ITelemetryProcessor>();
+
       var config = new ConsumerConfig {
-        BootstrapServers = "localhost:9092",
-        GroupId = "telemetry-processor-group", //a unique group ID for this consumer group
+        //now read from "configuration" obj
+        BootstrapServers = configuration.GetValue<string>("Kafka:BootstrapServers") ?? "localhost:9092",
+        GroupId = configuration.GetValue<string>("Kafka:GroupId") ?? "telemetry-processor-group", //a unique group ID for this consumer group
         AutoOffsetReset = AutoOffsetReset.Earliest, // start reading from the beginning if no offset is committed
       };
 
@@ -38,7 +52,7 @@ namespace TelemetryData.ConsumerService
               TelemetryDataModel? receivedTelemetry = JsonSerializer.Deserialize<TelemetryDataModel>(consumeResult.Message.Value);
 
               if (receivedTelemetry != null) {
-                Console.WriteLine($"Received TelemetryData: VehicleId={receivedTelemetry.VehicleId}, Speed={receivedTelemetry.Speed}, Engine Status={receivedTelemetry.EngineStatus}, on Partition: {consumeResult.Partition.Value}, Offset: {consumeResult.Offset.Value}");
+                await processor.ProcessTelemetryAsync(receivedTelemetry);
               } else {
                 Console.WriteLine($"Received null telemetry data from message: {consumeResult.Message.Value}");
               }
