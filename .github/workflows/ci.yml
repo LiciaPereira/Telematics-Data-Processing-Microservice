@@ -25,3 +25,6 @@ jobs:
 
       - name: Build
         run: dotnet build TelemetryData.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test TelemetryData.sln --configuration Release --no-build
